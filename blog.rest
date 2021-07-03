@@ -1,0 +1,26 @@
+POST http://localhost:3002/api/blogs
+Content-Type: application/json
+
+{
+   "title": "Blog list",
+    "author": "Nischhal",
+    "url": "https://fullstackopen.com/osa4/sovelluksen_rakenne_ja_testauksen_alkeet#sovelluksen-rakenne",
+    "likes": 66
+}
+
+###
+DELETE http://localhost:3002/api/blogs/60c1cfe6a9fe4c465dd391fb
+
+###
+GET http://localhost:3002/api/blogs
+
+###
+PUT http://localhost:3002/api/blogs/60c1cc92ed16ac03fe8d7f3c
+Content-Type: application/json
+
+{
+    "title": "Hello new blog here",
+    "author": "Shilpa",
+    "url": "https://fullstackopen.com/osa4/sovelluksen_rakenne_ja_testauksen_alkeet#sovelluksen-rakenne",
+    "likes": 66
+}
