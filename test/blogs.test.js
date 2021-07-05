@@ -214,8 +214,35 @@ describe('when there is initially one user at db', () => {
                 .expect(404)
                 .expect("Content-Type", /application\/json/)
         })
-    })
 
+        test("username length must be more than 3", async () => {
+            const newUser = {
+                username: "gag",
+                name: "Shilpa",
+                password: "random"
+            }
+
+            await api
+                .post('/api/users')
+                .send(newUser)
+                .expect(401)
+                .expect("Content-Type", /application\/json/)
+        })
+
+        test("password length must be more than 3", async () => {
+            const newUser = {
+                username: "shilpa",
+                name: "Shilpa",
+                password: "gag"
+            }
+
+            await api
+                .post('/api/users')
+                .send(newUser)
+                .expect(401)
+                .expect("Content-Type", /application\/json/)
+        })
+    })
 })
 
 afterAll(() => {
