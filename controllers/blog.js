@@ -1,13 +1,27 @@
 const Blog = require('../models/blog');
+const User = require('../models/user');
 const blogRouter = require('express').Router();
+const jwt = require('jsonwebtoken');
+
+// const getTokenFrom = request => {
+//     const authorization = request.get('authorization');
+//     if (authorization && authorization.toLowerCase().startsWith('bearer')) {
+//         return authorization.substring(7)
+//     }
+//     return null
+// }
 
 blogRouter.get('/', async (request, response) => {
-    const blogs = await Blog.find({});
+    const blogs = await Blog
+        .find({}).populate('user', { username: 1, name: 1 });
     response.json(blogs.map(blog => blog.toJSON()));
 })
 
-blogRouter.post('/', async (request, response) => {
+blogRouter.post('/', async (request, response, next) => {
     const body = request.body;
+    //console.log('body', body);
+    const user = request.user;
+    //console.log('User', user);
 
     if (!body.title || !body.author) {
         response.status(400).json({ error: "title or author name is missing!" });
@@ -20,10 +34,14 @@ blogRouter.post('/', async (request, response) => {
             title: body.title,
             author: body.author,
             url: body.url,
-            likes: body.likes
+            likes: body.likes,
+            user: user._id
         })
 
         const savedBlog = await blog.save();
+        user.blogs = user.blogs.concat(savedBlog._id);
+        await user.save();
+
         response.json(savedBlog.toJSON());
     }
 })
@@ -38,12 +56,20 @@ blogRouter.get('/:id', async (request, response) => {
 })
 
 blogRouter.delete('/:id', async (request, response, next) => {
-    const blog = await Blog.findByIdAndDelete(request.params.id)
-    response.status(204).end();
+    const user = request.user;
+    const blogToDelete = await Blog.findById(request.params.id);
+
+    if (user._id.toString() === blogToDelete.user.toString()) {
+        const deletedBlog = await blogToDelete.delete();
+        //console.log(deletedBlog);
+        response.status(204).end();
+    }
 })
 
-blogRouter.put('/:id', (request, response, next) => {
+blogRouter.put('/:id', async (request, response, next) => {
     const body = request.body;
+    const user = request.user;
+    const blogToDelete = await Blog.findById(request.params.id);
 
     const blog = {
         title: body.title,
@@ -52,11 +78,10 @@ blogRouter.put('/:id', (request, response, next) => {
         likes: body.likes
     }
 
-    Blog.findByIdAndUpdate(request.params.id, blog)
-        .then(updatedBlog => {
-            response.json(updatedBlog.toJSON());
-        })
-        .catch(error => next(error));
+    if (user._id.toString() === blogToDelete.user.toString()) {
+        const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog)
+        response.status(200).end();
+    }
 })
 
 module.exports = blogRouter;

@@ -1,26 +1,29 @@
 POST http://localhost:3002/api/blogs
 Content-Type: application/json
+Authorization: bearer YzJmNmIiLCJpYXQiOjE2MjYxNjUyNTIsImV4cCI6MTYyNjE2ODg1Mn0.Ne0VZ7MCH3b_-H7QojOeFEopCZ1s_wVGnhG4wzj0Vc8
 
 {
-   "title": "Blog list",
-    "author": "Nischhal",
+   "title": "middleware token check",
+    "author": "middleware",
     "url": "https://fullstackopen.com/osa4/sovelluksen_rakenne_ja_testauksen_alkeet#sovelluksen-rakenne",
-    "likes": 66
+    "likes": 33
 }
 
 ###
-DELETE http://localhost:3002/api/blogs/60d1b13010a0e88a64927af0
+DELETE http://localhost:3002/api/blogs/60e9924a69eb5c21cc7805fe
 
 ###
 GET http://localhost:3002/api/blogs/60c1cc92ed16ac03fe8d7f3c
 
 ###
-PUT http://localhost:3002/api/blogs/60c1cc92ed16ac03fe8d7f3c
+PUT http://localhost:3002/api/blogs/60eedff2a863299807bf37d2
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2MGUyY2JhNWIwNTc5YTU3ZjNhYzJmNmIiLCJpYXQiOjE2MjYyNjgwOTQsImV4cCI6MTYyNjI3MTY5NH0.FaACbpby_Wb4oKxZqiwL_M78iStxAh_CQsCx2wxh1Jg
 
 {
-    "title": "Hello new blog here",
-    "author": "Shilpa",
+    "title": "blog to be edited",
+    "author": "Token",
     "url": "https://fullstackopen.com/osa4/sovelluksen_rakenne_ja_testauksen_alkeet#sovelluksen-rakenne",
-    "likes": 66
+    "likes": 66,
+    "user": "60e2cba5b0579a57f3ac2f6b"
 }

@@ -41,6 +41,7 @@ describe("when there are only three blogs", () => {
                 author: "Shilpa",
                 likes: 44,
                 url: "www.fakeUrl.com"
+                //userId missing
             }
 
             await api
@@ -188,6 +189,8 @@ describe('when there is initially one user at db', () => {
 
     describe("username or password must be valid", () => {
         test("username is missing", async () => {
+            const usersAtStart = await helper.usersInDb();
+
             const newUser = {
                 username: "",
                 name: "Biswas",
@@ -199,9 +202,14 @@ describe('when there is initially one user at db', () => {
                 .send(newUser)
                 .expect(401)
                 .expect("Content-Type", /application\/json/)
+
+            const usersAtEnd = await helper.usersInDb();
+            expect(usersAtEnd).toHaveLength(usersAtStart.length);
         })
 
         test("password is missing", async () => {
+            const usersAtStart = await helper.usersInDb();
+
             const newUser = {
                 username: "gole",
                 name: "Biswas",
@@ -213,9 +221,14 @@ describe('when there is initially one user at db', () => {
                 .send(newUser)
                 .expect(404)
                 .expect("Content-Type", /application\/json/)
+
+            const usersAtEnd = await helper.usersInDb();
+            expect(usersAtEnd).toHaveLength(usersAtStart.length);
         })
 
         test("username length must be more than 3", async () => {
+            const usersAtStart = await helper.usersInDb();
+
             const newUser = {
                 username: "gag",
                 name: "Shilpa",
@@ -227,9 +240,14 @@ describe('when there is initially one user at db', () => {
                 .send(newUser)
                 .expect(401)
                 .expect("Content-Type", /application\/json/)
+
+            const usersAtEnd = await helper.usersInDb();
+            expect(usersAtEnd).toHaveLength(usersAtStart.length);
         })
 
         test("password length must be more than 3", async () => {
+            const usersAtStart = await helper.usersInDb();
+
             const newUser = {
                 username: "shilpa",
                 name: "Shilpa",
@@ -241,6 +259,9 @@ describe('when there is initially one user at db', () => {
                 .send(newUser)
                 .expect(401)
                 .expect("Content-Type", /application\/json/)
+
+            const usersAtEnd = await helper.usersInDb();
+            expect(usersAtEnd).toHaveLength(usersAtStart.length);
         })
     })
 })
